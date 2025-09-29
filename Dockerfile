@@ -12,9 +12,10 @@ RUN pip install --no-cache-dir "docling-serve[ui]"
 # 4. Define o ponto de entrada do aplicativo
 WORKDIR /app
 
-# 5. PRÉ-CARREGAMENTO DE MODELOS VLM (Corrige o erro de Repo ID)
+# 5. PRÉ-CARREGAMENTO DE MODELOS VLM - CORRIGIDO (Usando o CLI)
+# O comando 'docling-serve preload' é mais robusto que o import manual.
 ENV DOCLING_SERVE_PRELOAD_MODELS="SmolVLM-256M-Instruct"
-RUN python -c "import os; from docling_serve.loader import DoclingServeModelLoader; loader = DoclingServeModelLoader(os.getenv('DOCLING_SERVE_PRELOAD_MODELS')); loader.load_models()"
+RUN docling-serve preload $DOCLING_SERVE_PRELOAD_MODELS
 
 # 6. Expõe a porta e inicia o serviço
 EXPOSE 5001
